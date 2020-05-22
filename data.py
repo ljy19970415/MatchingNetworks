@@ -204,8 +204,7 @@ class MatchingNetworkDatasetParallel(Dataset):
             image_batch.append(image)
 
         image_batch = np.array(image_batch, dtype=np.float32)
-        image_batch = self.preprocess_data(image_batch)
-
+        image_batch = self.preprocess_data(image_batch) #image_batch.shape=(1,28,28,1)
         return image_batch
 
     def preprocess_data(self, x):
@@ -404,7 +403,7 @@ class MatchingNetworkLoader(object):
 
     def sample_iter_data(self, sample, num_gpus, batch_size, samples_per_iter):
         output_sample = []
-        for key in sample.keys():
+        for key in ['support_set_images', 'target_set_image', 'support_set_labels','target_set_label']:
             sample[key] = np.array(sample[key].numpy(), dtype=np.float32)
             new_shape = []
             curr_id = 1
@@ -421,7 +420,6 @@ class MatchingNetworkLoader(object):
                     curr_id += 1
 
             output_sample.append(np.reshape(sample[key], newshape=new_shape))
-
         return output_sample
 
 class FolderMatchingNetworkDatasetParallel(MatchingNetworkDatasetParallel):

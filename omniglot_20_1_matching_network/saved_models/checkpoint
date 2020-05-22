@@ -1,0 +1,6 @@
+model_checkpoint_path: "omniglot_20_1_matching_network_124.ckpt"
+all_model_checkpoint_paths: "omniglot_20_1_matching_network_120.ckpt"
+all_model_checkpoint_paths: "omniglot_20_1_matching_network_121.ckpt"
+all_model_checkpoint_paths: "omniglot_20_1_matching_network_122.ckpt"
+all_model_checkpoint_paths: "omniglot_20_1_matching_network_123.ckpt"
+all_model_checkpoint_paths: "omniglot_20_1_matching_network_124.ckpt"

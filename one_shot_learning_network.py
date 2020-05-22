@@ -150,6 +150,8 @@ class Classifier:
         :param batch_size: Batch size for experiment
         :param layer_sizes: A list of length 4 containing the layer sizes
         :param num_channels: Number of channels of images
+        :param label_types_num: 所有标签种类数
+        :param label: 每个图片对应的真实标签
         """
         self.reuse = False
         self.name = name
@@ -167,7 +169,7 @@ class Classifier:
         :return: Embeddings of size [batch_size, 64]
         """
         with tf.variable_scope(self.name, reuse=self.reuse):
-            outputs = image_input
+            outputs = image_input #image_input.shape: (32,28,28,1)
             with tf.variable_scope('conv_layers'):
                 for idx, num_filters in enumerate(self.layer_sizes):
                     with tf.variable_scope('g_conv_{}'.format(idx)):
@@ -186,7 +188,19 @@ class Classifier:
                                                    padding='SAME')
                         #outputs = tf.layers.dropout(outputs, rate=dropout_rate, training=training)
 
-            image_embedding = tf.contrib.layers.flatten(outputs)
+                        # # 全连接层1
+                        # W_fc1 = weight_variable([64,1024])
+                        # b_fc1 = bias_variable([1024])
+                        # h_pool2_flat = tf.reshape(outputs, [-1,7*7*64])   #[n_samples,1,1,64]->>[n_samples,1*1*64]
+                        # h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
+                        # h_fc1_drop = tf.nn.dropout(h_fc1, dropout_rate) # 减少计算量dropout
+
+                        # # 全连接层2
+                        # W_fc2 = weight_variable([1024, 所有标签种类数])
+                        # b_fc2 = bias_variable([所有标签种类数])
+                        # prediction = tf.matmul(h_fc1_drop, W_fc2) + b_fc2                       
+
+            image_embedding = tf.contrib.layers.flatten(outputs) #image_embedding: (32,64)
 
         self.reuse = True
         self.variables = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=self.name)
